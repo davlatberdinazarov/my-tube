@@ -6,6 +6,7 @@ import AppLayout from "./layouts/AppLayout";
 import Login from "./components/login";
 import Register from "./components/register";
 import MainLayout from "./layouts/MainLayout";
+import Profile from "./components/profile";
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
           <Route element={<MainLayout />} >
             <Route index element={<Home />} />
             <Route path="videos" element={<VideoList />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

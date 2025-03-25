@@ -26,7 +26,8 @@ import {
   Bars2Icon,
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
- 
+import { CreateVideo } from "./dialogs/create-video";
+
 // profile menu component
 const profileMenuItems = [
   {
@@ -50,12 +51,12 @@ const profileMenuItems = [
     icon: PowerIcon,
   },
 ];
- 
+
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+
   const closeMenu = () => setIsMenuOpen(false);
- 
+
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       <MenuHandler>
@@ -80,38 +81,29 @@ function ProfileMenu() {
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon }, key) => {
-          const isLastItem = key === profileMenuItems.length - 1;
-          return (
-            <MenuItem
-              key={label}
-              onClick={closeMenu}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
-              }`}
-            >
-              {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-                strokeWidth: 2,
-              })}
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color={isLastItem ? "red" : "inherit"}
-              >
-                {label}
-              </Typography>
-            </MenuItem>
-          );
-        })}
+        <Link className=" border-none hover:border-none" to="/profile">
+          <MenuItem
+            className={`flex items-center gap-2 rounded ${"hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"}`}
+          >
+            <Cog6ToothIcon className="h-4 w-4" />
+            <Typography as="span" variant="small" className="font-normal">
+              Porfile
+            </Typography>
+          </MenuItem>
+        </Link>
+        <MenuItem
+          className={`flex items-center gap-2 rounded ${"hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"}`}
+        >
+          <PowerIcon className="h-4 w-4" />
+          <Typography as="span" variant="small" className="font-normal">
+            Sign Out
+          </Typography>
+        </MenuItem>
       </MenuList>
     </Menu>
   );
 }
- 
+
 // nav list menu
 const navListMenuItems = [
   {
@@ -130,10 +122,10 @@ const navListMenuItems = [
       "A complete set of UI Elements for building faster websites in less time.",
   },
 ];
- 
+
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+
   const renderItems = navListMenuItems.map(({ title, description }) => (
     <a href="#" key={title}>
       <MenuItem>
@@ -146,7 +138,7 @@ function NavListMenu() {
       </MenuItem>
     </a>
   ));
- 
+
   return (
     <React.Fragment>
       <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
@@ -188,7 +180,7 @@ function NavListMenu() {
     </React.Fragment>
   );
 }
- 
+
 // nav list component
 const navListItems = [
   {
@@ -199,59 +191,42 @@ const navListItems = [
     label: "Blocks",
     icon: CubeTransparentIcon,
   },
-  {
-    label: "Docs",
-    icon: CodeBracketSquareIcon,
-  },
 ];
- 
-function NavList() {
-  return (
-    <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      <NavListMenu />
-      {navListItems.map(({ label, icon }, key) => (
-        <Typography
-          key={label}
-          as="a"
-          href="#"
-          variant="small"
-          color="gray"
-          className="font-medium text-blue-gray-500"
-        >
-          <MenuItem className="flex items-center gap-2 lg:rounded-full">
-            {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
-            <span className="text-gray-900"> {label}</span>
-          </MenuItem>
-        </Typography>
-      ))}
-    </ul>
-  );
-}
- 
+
 export function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
- 
+
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
- 
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false),
+      () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
- 
+
+  let token = localStorage.getItem("token");
+
   return (
     <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
       <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
-        >
-          Material Tailwind
-        </Typography>
-        <div className="hidden lg:block">
-          <NavList />
+        <Link to="/">
+          <Typography variant="h5" color="blue-gray" className="font-semibold">
+            My Tube
+          </Typography>
+        </Link>
+        <div className="">
+          <Typography
+            as="a"
+            href="#"
+            variant="small"
+            color="gray"
+            className="font-medium text-blue-gray-500"
+          >
+            <MenuItem className="flex items-center gap-2 lg:rounded-full">
+            <CreateVideo/>
+            </MenuItem>
+          </Typography>
         </div>
         <IconButton
           size="sm"
@@ -262,17 +237,17 @@ export function ComplexNavbar() {
         >
           <Bars2Icon className="h-6 w-6" />
         </IconButton>
- 
+
         <Link to="/login" className="hidden lg:block">
-        <Button size="sm" variant="text">
-          <span>Log In</span>
-        </Button>
+          <Button size="sm" variant="text">
+            <span>Log In</span>
+          </Button>
         </Link>
-        <ProfileMenu />
+        {token && <ProfileMenu />}
       </div>
-      <MobileNav open={isNavOpen} className="overflow-scroll">
-        <NavList />
-      </MobileNav>
+      {/* <MobileNav open={isNavOpen} className="overflow-scroll">
+       
+      </MobileNav> */}
     </Navbar>
   );
 }
