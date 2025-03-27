@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Navbar,
   MobileNav,
@@ -25,8 +25,10 @@ import {
   RocketLaunchIcon,
   Bars2Icon,
 } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CreateVideo } from "./dialogs/create-video";
+import { $api, BASE_URL } from "../utils";
+import { MainContext } from "../layouts/MainLayout";
 
 // profile menu component
 const profileMenuItems = [
@@ -55,30 +57,39 @@ const profileMenuItems = [
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-  const closeMenu = () => setIsMenuOpen(false);
+  const { LogOut, profile } = useContext(MainContext);
+
+  console.log(profile);
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       <MenuHandler>
-        <Button
-          variant="text"
-          color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
-        >
-          <Avatar
-            variant="circular"
-            size="sm"
-            alt="tania andrew"
-            className="border border-gray-900 p-0.5"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-          />
-          <ChevronDownIcon
-            strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
-              isMenuOpen ? "rotate-180" : ""
-            }`}
-          />
-        </Button>
+        <div className=" flex  items-center gap-3">
+          <p>{profile.name}</p>
+          <Button
+            variant="text"
+            color="blue-gray"
+            className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          >
+            <Avatar
+              variant="circular"
+              size="sm"
+              alt="tania andrew"
+              className="border border-gray-900 p-0.5"
+              src={`${
+                profile?.avatar
+                  ? BASE_URL + "/" + profile?.avatar
+                  : "   https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHVzZXJ8ZW58MHx8MHx8fDA%3D"
+              }`}
+            />
+            <ChevronDownIcon
+              strokeWidth={2.5}
+              className={`h-3 w-3 transition-transform ${
+                isMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </Button>
+        </div>
       </MenuHandler>
       <MenuList className="p-1">
         <Link className=" border-none hover:border-none" to="/profile">
@@ -92,6 +103,7 @@ function ProfileMenu() {
           </MenuItem>
         </Link>
         <MenuItem
+          onClick={LogOut}
           className={`flex items-center gap-2 rounded ${"hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"}`}
         >
           <PowerIcon className="h-4 w-4" />
@@ -224,7 +236,7 @@ export function ComplexNavbar() {
             className="font-medium text-blue-gray-500"
           >
             <MenuItem className="flex items-center gap-2 lg:rounded-full">
-            <CreateVideo/>
+              <CreateVideo />
             </MenuItem>
           </Typography>
         </div>

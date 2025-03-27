@@ -18,8 +18,8 @@ const createVideo = async (req, res) => {
       url: req.body.url,
       category: req.body.category,
       author: userId
-
     }
+    console.log(userId)
     const video = new Video(newVideo);
     await video.save();
     res.status(201).json(video);
@@ -31,7 +31,7 @@ const createVideo = async (req, res) => {
 // get all
 const getAll = async (req, res) => {
   try {
-    const videos = await Video.find().populate("author", "name email");
+    const videos = await Video.find().populate("author", "name avatar");
     res.status(200).json(videos);
   } catch (error) {
     res.status(400).json({ message: error.message });

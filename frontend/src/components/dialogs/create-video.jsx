@@ -33,12 +33,6 @@ export function CreateVideo() {
           description,
           url,
           category,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
         }
       );
 

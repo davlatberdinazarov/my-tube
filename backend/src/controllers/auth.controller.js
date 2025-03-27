@@ -55,7 +55,7 @@ const authLogin = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, avatar: user.avatar },
     });
   } catch (error) {
     res.status(500).json({ message: "Xatolik" });
@@ -71,30 +71,42 @@ const authProfile = async (req, res) => {
   }
 };
 
-
 const updateProfile = async (req, res) => {
   try {
-    const { name, password, avatar } = req.body;
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!req.file) {
+      return res.status(400).send("Fayl yuklanmadi.");
+    }
+
+    const { name, password } = req.body;
+    let userId = req.user.id;
+
+    // Foydalanuvchini topamiz
+    let user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Foydalanuvchi ma'lumotlarini yangilash
     if (name) user.name = name;
-    if (avatar) user.avatar = avatar;
-    
+
     // Agar parol o‘zgartirilayotgan bo‘lsa, uni hash qilish
     if (password) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
     }
 
+    if (req.file) {
+      user.avatar = req.file.path; // Faqat rasm yo‘lini saqlaymiz
+    }
+    
+
+    // O‘zgarishlarni saqlash
     await user.save();
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "Profil yangilandi",
-      user: { name: user.name, email: user.email, avatar: user.avatar }
+      user: { name: user.name, email: user.email, avatar: user.avatar },
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server xatosi!" });
