@@ -7,7 +7,7 @@ const router = express.Router();
 
 // ROUTES
 router.post("/create", authMiddleware, createVideo )
-router.get("/getAll", getAll )
+router.get("/getAll", authMiddleware, getAll )
 router.get("/getById/:id", getById)
 router.put("/update/:id", authMiddleware, updateById)
 router.delete("/deleteById/:id", authMiddleware, deleteById)

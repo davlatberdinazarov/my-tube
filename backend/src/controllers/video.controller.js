@@ -31,8 +31,15 @@ const createVideo = async (req, res) => {
 // get all
 const getAll = async (req, res) => {
   try {
+    let userId = req.user.id; // Foydalanuvchi ID sini olish
     const videos = await Video.find().populate("author", "name avatar");
-    res.status(200).json(videos);
+
+    const updatedVideos = videos.map(video => ({
+      ...video.toObject(),
+      hasLiked: video.likes.includes(userId)
+    }));
+
+    res.status(200).json(updatedVideos);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -5,6 +5,7 @@ import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { Button } from "@material-tailwind/react";
 import { MainContext } from "../layouts/MainLayout";
 import { DeleteVideo } from "./dialogs/delete-video";
+import { UpdateVideo } from "./dialogs/update-dialog";
 
 const VideoList = () => {
   const [videos, setVideos] = useState([]);
@@ -16,35 +17,27 @@ const VideoList = () => {
   // Auth'dan foydalanuvchi ID ni olish (bu joy o‘zgarishi mumkin)
   const userId = localStorage.getItem("userId"); // Agar context ishlatsangiz, undan oling
 
+
+  const fetchVideos = async () => {
+    try {
+      const response = await $api.get("/videos/getAll");
+      setVideos(response.data);
+    } catch (err) {
+      setError("Videolarni yuklashda xatolik yuz berdi!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const response = await $axios.get("/videos/getAll");
-        setVideos(response.data);
-      } catch (err) {
-        setError("Videolarni yuklashda xatolik yuz berdi!");
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchVideos();
   }, []);
 
   const toggleLike = async (videoId) => {
     try {
-      const response = await $api.put(`/videos/${videoId}/like`);
-      const updatedVideos = videos.map((video) =>
-        video._id === videoId
-          ? {
-              ...video,
-              likes: response.data.hasLiked
-                ? [...video.likes, userId]
-                : video.likes.filter((id) => id !== userId),
-            }
-          : video
-      );
-      setVideos(updatedVideos);
+      await $api.put(`/videos/${videoId}/like`);
+      fetchVideos(); // ✅ Backenddan qayta ma'lumot olib, UI ni yangilaymiz
     } catch (error) {
       console.error("Like o‘zgartirishda xatolik:", error);
     }
@@ -114,7 +107,7 @@ const VideoList = () => {
               </div>
 
               { profile.name === video.author.name && <div className=" my-3 flex justify-between">
-                <Button color="blue">Update</Button>
+                <UpdateVideo data={video} />
                 <DeleteVideo videoId={video._id}/>
               </div>}
             </div>
