@@ -65,7 +65,7 @@ function ProfileMenu() {
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       <MenuHandler>
         <div className=" flex  items-center gap-3">
-          <p>{profile.name}</p>
+          <p>{profile?.name}</p>
           <Button
             variant="text"
             color="blue-gray"

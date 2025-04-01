@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://localhost:5000";
+export const BASE_URL = "https://my-shop-api-n5vp.onrender.com";
 
 let token = localStorage.getItem('token')
 

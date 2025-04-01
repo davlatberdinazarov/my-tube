@@ -65,7 +65,6 @@ export function UpdateVideo({ data }) {
               onChange={(e) => setTitle(e.target.value)}
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             />
-
             <Input
               size="lg"
               value={description}
@@ -80,7 +79,6 @@ export function UpdateVideo({ data }) {
               onChange={(e) => setUrl(e.target.value)}
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             />
-
             <Input
               size="lg"
               label="Category"

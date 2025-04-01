@@ -12,7 +12,7 @@ const createVideo = async (req, res) => {
     const userId = req.user.id;
 
     const newVideo = {
-      
+         
       title: req.body.title,
       description: req.body.description,
       url: req.body.url,

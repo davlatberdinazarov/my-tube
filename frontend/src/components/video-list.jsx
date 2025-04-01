@@ -17,7 +17,6 @@ const VideoList = () => {
   // Auth'dan foydalanuvchi ID ni olish (bu joy o‘zgarishi mumkin)
   const userId = localStorage.getItem("userId"); // Agar context ishlatsangiz, undan oling
 
-
   const fetchVideos = async () => {
     try {
       const response = await $api.get("/videos/getAll");
@@ -30,7 +29,6 @@ const VideoList = () => {
   };
 
   useEffect(() => {
-
     fetchVideos();
   }, []);
 
@@ -42,7 +40,6 @@ const VideoList = () => {
       console.error("Like o‘zgartirishda xatolik:", error);
     }
   };
-  
 
   if (loading)
     return <p className="text-center text-blue-500">Yuklanmoqda...</p>;
@@ -106,7 +103,7 @@ const VideoList = () => {
                 </button>
               </div>
 
-              { profile.name === video.author.name && <div className=" my-3 flex justify-between">
+              { profile?.name === video.author?.name && <div className=" my-3 flex justify-between">
                 <UpdateVideo data={video} />
                 <DeleteVideo videoId={video._id}/>
               </div>}
